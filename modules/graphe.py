@@ -2,8 +2,8 @@ try:
     from queue import Queue
     from stack import Stack
 except ImportError:
-    from util.queue import Queue
-    from util.stack import Stack   
+    from modules.queue import Queue
+    from modules.stack import Stack   
 
 class Graph:
     def __init__(self, plateau):
@@ -189,9 +189,3 @@ class Graph:
     
 
     
-
-                        
-
-
-
-
