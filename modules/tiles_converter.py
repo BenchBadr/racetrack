@@ -151,5 +151,6 @@ def creation_plateau(dim, order=2):
             plateau[int(p[0])][int(p[1])] = 3
     return plateau
 
-plateau = Terrain(creation_plateau(40, 20))
-plateau.display()
+if __name__ == '__main__':
+    plateau = Terrain(creation_plateau(40, 20))
+    plateau.display()
