@@ -135,8 +135,6 @@ def creation_plateau(dim, order=2):
         obs = get_control_point(p0, p1, dim)
         observatory.append(obs)
 
-        print('link',p0, p1,'using', obs, f'({i-1})')
-
         # abcisse distane
         draw_bezier(plateau, p0, p1, dim, obs)
 
@@ -149,5 +147,5 @@ def creation_plateau(dim, order=2):
             plateau[int(p[0])][int(p[1])] = 3
     return plateau
 
-plateau = Terrain(creation_plateau(40, 10))
+plateau = Terrain(creation_plateau(40, 20))
 plateau.display()

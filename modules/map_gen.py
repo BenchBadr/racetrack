@@ -17,7 +17,8 @@ tiles = {
     'biscorner_sw':(1,4),
     'biscorner_se':(0,4),
     'start':(12,0),
-    'end':(12,1)
+    'end':(12,1),
+    'pierre':(12,2)
 }
 
 

@@ -52,18 +52,20 @@ class Terrain:
                             elif voisins[0] == (0, 1):
                                 out[x][y] = 'east'
                             elif voisins[0] == (0, -1):
-                                print(x,y, voisins)
                                 out[x][y] = 'west'
                             
                         else:
-                            if (1, 0) in voisins and (0, 1) in voisins:
-                                out[x][y] = 'corner_se'
-                            elif (1, 0) in voisins and (0, -1) in voisins:
-                                out[x][y] = 'corner_sw'
-                            elif (-1, 0) in voisins and (0, 1) in voisins:
-                                out[x][y] = 'corner_ne'
-                            elif (-1, 0) in voisins and (0, -1) in voisins:
-                                out[x][y] = 'corner_nw'
+                            if len(voisins) == 2:
+                                if (1, 0) in voisins and (0, 1) in voisins:
+                                    out[x][y] = 'corner_se'
+                                elif (1, 0) in voisins and (0, -1) in voisins:
+                                    out[x][y] = 'corner_sw'
+                                elif (-1, 0) in voisins and (0, 1) in voisins:
+                                    out[x][y] = 'corner_ne'
+                                elif (-1, 0) in voisins and (0, -1) in voisins:
+                                    out[x][y] = 'corner_nw'
+                            else:
+                                out[x][y] = 'pierre'
                 if tile == 2:
                     out[x][y] = 'start'
                 if tile == 3:    
