@@ -28,7 +28,7 @@ class Terrain:
             for y, tile in enumerate(row):
                 if tile == 0:
                     out[x][y] = 'mur'
-                    continue
+                    # continue
                     adj = self.get_adjacent(x,y)
                     voisins = adj[0]
                     biscorners = adj[1]

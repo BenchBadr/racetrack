@@ -1,9 +1,9 @@
 from modules.terrain import Terrain
 from modules.stack import Stack
-from random import choice, randint
+from random import choice, randint, randrange
 import math
 
-def get_neigh(base, x, y):
+def get_neigh(base:list[list[int]], x:int, y:int) -> list[tuple[int]]:
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)] 
         neigh = []
         for dr, dc in directions:
@@ -12,7 +12,7 @@ def get_neigh(base, x, y):
                 neigh.append((new_row,new_col))
         return neigh
 
-def voisinnage(base, s, end):
+def voisinnage(base:list[list[int]], s, end) -> None:
     if s.is_empty():
         return
     x, y = s.pop()
@@ -50,7 +50,7 @@ def voisinnage(base, s, end):
 
          
 
-def creation_plateau_recursif(dim):
+def creation_plateau_recursif(dim:int) -> list[list[int]]:
     base = [[None for i in range(dim)] for j in range(dim)]
 
     # definir debut / fin
@@ -66,7 +66,6 @@ def creation_plateau_recursif(dim):
     s = Stack()
     s.push(start)
     voisinnage(base, s, end)
-    print(base)
     for i in range(dim):
        for j in range(dim):
            if base[i][j] is None:
@@ -74,58 +73,81 @@ def creation_plateau_recursif(dim):
     return base
     
 
-def bezier_curve(t, a, b, obs):
-    # ligne a - obs
-    ab0 = (1-t)*a[0] + t*(b[0])
-    ab1 = (1-t)*a[1] + t*(b[1])
-
-    # ligne obs - b
-    bc0 = (1-t)*b[0] + t*(obs[0])
-    bc1 = (1-t)*b[1] + t*(obs[1])
-
-    q0 = (1-t)*ab0 + t*(bc0)
-    q1 = (1-t)*ab1 + t*(bc1)
+def bezier_curve(t:float, a:tuple, b:tuple, obs:tuple) -> tuple[float]:
+    q0 = (1-t)**2 * a[0] + 2*(1-t)*t * obs[0] + t**2 * b[0]
+    q1 = (1-t)**2 * a[1] + 2*(1-t)*t * obs[1] + t**2 * b[1]
     return (q0, q1)
 
+def draw_bezier(plateau:list[list[int]], p1:tuple, p0:tuple, dim:int, obs:tuple, thickness=3) -> None:
+    delta = max(abs(p1[0] - p0[0]), abs(p1[1] - p0[1])) + 1
+    half_thickness = (thickness - 1) / 2
+    
+    for t in range(delta):
+        x, y = bezier_curve(t / delta, p0, p1, obs)
+        for dx in range(-int(half_thickness), int(half_thickness) + 1):
+            for dy in range(-int(half_thickness), int(half_thickness) + 1):
+                ix = min(max(math.floor(x) + dx, 0), dim-1)
+                iy = min(max(math.floor(y) + dy, 0), dim-1)
+                plateau[ix][iy] = 1
+
+
+
+def get_control_point(p0, p1, dim, height=10):
+    
+    # vecteur des deux points
+    dx = p1[0] - p0[0]
+    dy = p1[1] - p0[1]
+    
+    # vecteur perpendiculaire au segment associé
+    perp_x = -dy
+    perp_y = dx
+    
+    # normaliser le vecteur perpendiculaire
+    length = (perp_x**2 + perp_y**2)**0.5
+    if length > 0:
+        perp_x = choice([-1, 1]) * perp_x / length * height
+        perp_y = choice([-1, 1]) * perp_y / length * height
+    
+    cp_x = max(min(p0[0] + dx + perp_x, dim-1), 0)
+    cp_y = max(min(p0[1] + dy + perp_y, dim-1), 0)
+    
+    return (cp_x, cp_y)
+
 def creation_plateau(dim, order=2):
+    debug = False
     plateau = [[0 for _ in range(dim)] for _ in range(dim)]
     start = (0,0)
     end = (dim-start[0]-1,dim-start[1]-1)
 
-    placed_points = [(i, randint(0, dim-1)) for i in range(order)]
-    observatory = [(randint(0, dim-1),i) for i in range(order*2)]
-    points = [start, *placed_points, end]
-    print(points)
+    def y_coord(i):
+        def borne(i):
+            return max(min(math.floor((i/order)*(dim-1)), dim-1), 0)
+        return randint(borne(i), borne(i+1))
 
-    for i in range(len(points)-1):
-        p0 = points[i]
-        p1 = points[i+1]
+    placed_points = [(randint(0, dim-1),
+                    y_coord(i)
+                    ) for i in range(order)]
+    points = [start, *placed_points, end, None]
+    observatory = []
+    for i in range(1,len(points)-1):
+        p0 = points[i-1]
+        p1 = points[i]
+        obs = get_control_point(p0, p1, dim)
+        observatory.append(obs)
 
-        obs = observatory[i-1]
+        print('link',p0, p1,'using', obs, f'({i-1})')
 
         # abcisse distane
-        delta = max(abs(p1[0] - p0[0]), abs(p1[1] - p0[1])) + 1
-        for t in range(delta):
-            x, y = bezier_curve(t / delta, p0, p1, obs)
-
-            ix = min(max(math.floor(x), 0), dim-1)
-            iy = min(max(math.floor(y), 0), dim-1)
-
-            plateau[ix][iy] = 1
-
-        if i%2==0:
-            if p1!=end:
-                plateau[p1[0]][p1[1]] = 1
-        else:
-            plateau[p1[0]][p1[1]] = 3
+        draw_bezier(plateau, p0, p1, dim, obs)
 
     plateau[start[0]][start[1]] = 2
     plateau[end[0]][end[1]] = 3
-    for o in observatory:
-        plateau[o[0]][o[1]] = 3
-    for p in placed_points:
-        plateau[p[0]][p[1]] = 2
+    if debug:
+        for p in placed_points:
+            plateau[p[0]][p[1]] = 2
+        for p in observatory:
+            plateau[int(p[0])][int(p[1])] = 3
     return plateau
 
-plateau = Terrain(creation_plateau(40, 1))
+plateau = Terrain(creation_plateau(40, 10))
 plateau.display()
