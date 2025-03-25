@@ -20,10 +20,12 @@ tiles = {
     'end':(12,1),
     'pierre':(12,2)
 }
-
+import os
 
 def get_tile(position, tile_size=(16, 16)):
-    tileset = Image.open('assets/tileset.png')
+    script_dir = os.path.dirname(__file__)
+    tileset_path = os.path.join(script_dir, 'assets', 'tileset.png')
+    tileset = Image.open(tileset_path)
     x, y = position
     tile_width, tile_height = tile_size
     left = x * tile_width

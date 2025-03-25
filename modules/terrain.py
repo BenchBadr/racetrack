@@ -72,7 +72,6 @@ class Terrain:
                     out[x][y] = 'end'
 
         grid = draw_map(out)
-        grid.show()
-        return ''
+        return grid
     def __str__(self):
-        return self.display()
+        return self.display().show()

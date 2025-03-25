@@ -152,5 +152,5 @@ def creation_plateau(dim, order=2):
     return plateau
 
 if __name__ == '__main__':
-    plateau = Terrain(creation_plateau(40, 20))
+    plateau = Terrain(creation_plateau(500, 300))
     plateau.display()
