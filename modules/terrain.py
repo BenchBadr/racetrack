@@ -24,6 +24,7 @@ class Terrain:
                         adjacent_indices.append((dr, dc))
         return [adjacent_indices, biscorners]
     
+    # comment test
     def display(self):
         out = [['sol' for _ in range(len(self.grid[0]))] for _ in range(len(self.grid))] 
         for x, row in enumerate(self.grid):
