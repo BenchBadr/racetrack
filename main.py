@@ -11,7 +11,7 @@ def mainloop():
     width = 600
     height = 600
     end = False
-    solve = False
+    solve = True
         
     dim_plateau = 40
     plateau = Terrain(creation_plateau(dim_plateau, 10))
