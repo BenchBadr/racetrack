@@ -74,7 +74,7 @@ def creation_plateau_recursif(dim:int) -> list[list[int]]:
        for j in range(dim):
            if base[i][j] is None:
                base[i][j] = 0
-    return base
+    return [base, start, end]
     
 
 def bezier_curve(t:float, a:tuple, b:tuple, obs:tuple) -> tuple[float]:
@@ -149,7 +149,7 @@ def creation_plateau(dim, order=2):
             plateau[p[0]][p[1]] = 2
         for p in observatory:
             plateau[int(p[0])][int(p[1])] = 3
-    return plateau
+    return [plateau, start, end]
 
 if __name__ == '__main__':
     plateau = Terrain(creation_plateau(500, 300))

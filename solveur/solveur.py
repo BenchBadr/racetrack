@@ -12,7 +12,7 @@ def reso(piste:list, pos_x_y:list, trajectoire:list, vitesse:list, visite:set) -
         True/False en fonction de s'il y existe une solution ou non.
     """
     #  Si on est sur une case désignant l'arrivée.
-    if piste[pos_x_y[0] + vitesse[0]][pos_x_y[1] + vitesse[1]] == 2:  # Mettre le numéro de la case de fin.
+    if piste[pos_x_y[0] + vitesse[0]][pos_x_y[1] + vitesse[1]] == 3:  # Mettre le numéro de la case de fin.
         return True
 
     # Calcul de la nouvelle position en fonction de la vitesse.
@@ -83,22 +83,14 @@ def nouvelle_vitesse(position:list, nv_pos:list, vitesse:tuple) -> tuple:
 
 
 
-def main():
+def solveur(piste, pos_x_y):
     visite = set()
-    visite.add((0, 0))
     #grille donnée par chat gpt
-    piste = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 3, 1, 1, 1, 1, 1, 1, 2, 0],
-    [0, 0, 0, 1, 1, 1, 1, 0, 2, 0],
-    [0, 0, 0, 1, 1, 1, 1, 0, 2, 0],
-    [0, 0, 0, 1, 1, 1, 1, 0, 2, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-    pos_x_y = [1, 1]
     trajectoire = [[1, 1]]
     vitesse = (0, 0)
+    return reso(piste, pos_x_y, trajectoire, vitesse, visite), trajectoire
 
-    print(reso(piste, pos_x_y, trajectoire, vitesse, visite))
 
-main()
+if __name__ == '__main__':
+    piste = [[2, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1, 1, 1, 3]]
+    print(solveur(piste, (0,0)))

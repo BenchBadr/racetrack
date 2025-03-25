@@ -4,8 +4,10 @@ except ImportError:
     from modules.map_gen import get_tile, draw_map
 
 class Terrain:
-    def __init__(self, grid):
-        self.grid = grid
+    def __init__(self, liste):
+        self.grid = liste[0]
+        self.start = liste[1]
+        self.end = liste[2]
 
     def get_adjacent(self, row, col):
         adjacent_indices = []
@@ -70,6 +72,7 @@ class Terrain:
                     out[x][y] = 'start'
                 if tile == 3:    
                     out[x][y] = 'end'
+
 
         grid = draw_map(out)
         return grid
